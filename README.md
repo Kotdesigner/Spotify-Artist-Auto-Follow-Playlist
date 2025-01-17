@@ -31,11 +31,10 @@ Installation and Setup
         Save the app.
         Copy the Client ID and Client Secret (click Show Secret Key) for later use.
 
-    Install Python and Dependencies:
+Install Python and Dependencies:
         Ensure you have Python installed on your system.
         Install the required library spotipy:
-
-    pip install spotipy
+        pip install spotipy
 
 Download the Python Script:
 
