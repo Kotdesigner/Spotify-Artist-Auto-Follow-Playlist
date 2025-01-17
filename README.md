@@ -34,6 +34,7 @@ Installation and Setup
 Install Python and Dependencies:
         Ensure you have Python installed on your system.
         Install the required library spotipy:
+        
         pip install spotipy
 
 Download the Python Script:
