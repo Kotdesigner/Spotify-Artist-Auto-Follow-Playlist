@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Auto-Follow</title>
+    <style>
+        /* Hintergrund mit Farbverlauf */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1DB954, #191414);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Glassmorphism Container */
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* Eingabefelder */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: center;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            background: #1DB954;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #17a647;
+            transform: scale(1.05);
+        }
+
+        /* Status Meldung */
+        #status {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #ffeb3b;
+        }
+
+        /* Künstlerliste */
+        .artist-list {
+            text-align: left;
+            max-height: 180px;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-top: 10px;
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Info-Links */
+        .info-links {
+            margin-top: 15px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .info-links a {
+            color: #1DB954;
+            text-decoration: none;
+        }
+
+        .info-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Branding */
+        .branding {
+            margin-top: 20px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Spotify Auto-Follow</h1>
+    <p>Gib deine Spotify API-Daten & Playlist-ID ein:</p>
+
+    <input type="text" id="clientId" placeholder="Spotify Client ID">
+    <input type="text" id="clientSecret" placeholder="Spotify Client Secret">
+    <input type="text" id="playlistId" placeholder="Spotify Playlist ID">
+
+    <button class="btn" onclick="startProcess()">🚀 Starten</button>
+
+    <p id="status"></p>
+
+    <div class="artist-list">
+        <h3>Gefundene Künstler: <span id="artistCount">0</span></h3>
+        <ul id="artistList"></ul>
+    </div>
+
+    <div class="info-links">
+        ℹ️ <a href="https://developer.spotify.com/dashboard/applications" target="_blank">Get Spotify API Keys</a> |
+        🔗 <a href="https://github.com/Kotdesigner/Spotify-Auto-Follow" target="_blank">GitHub Project</a>
+    </div>
+
+    <div class="branding">
+        🚀 Entwickelt von <strong>KOTDESIGNER (BEBØRG)</strong>  
+    </div>
+</div>
+
+<script>
+    let accessToken = '';
+    let artistIds = new Set();
+    let artistNames = [];
+
+    async function getSpotifyToken(clientId, clientSecret) {
+        const response = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });
+
+        const data = await response.json();
+        return data.access_token;
+    }
+
+    async function startProcess() {
+        const clientId = document.getElementById('clientId').value.trim();
+        const clientSecret = document.getElementById('clientSecret').value.trim();
+        const playlistId = document.getElementById('playlistId').value.trim();
+        const statusText = document.getElementById('status');
+
+        if (!clientId || !clientSecret || !playlistId) {
+            statusText.innerHTML = "⚠️ Bitte alle Felder ausfüllen.";
+            return;
+        }
+
+        statusText.innerHTML = "⏳ Autorisierung bei Spotify...";
+        accessToken = await getSpotifyToken(clientId, clientSecret);
+
+        if (!accessToken) {
+            statusText.innerHTML = "❌ Fehler beim Abrufen des Tokens.";
+            return;
+        }
+
+        statusText.innerHTML = "⏳ Künstler werden geladen...";
+
+        let playlistResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+
+        let playlistData = await playlistResponse.json();
+        playlistData.items.forEach(item => {
+            item.track.artists.forEach(artist => {
+                artistIds.add(artist.id);
+                artistNames.push(artist.name);
+            });
+        });
+
+        statusText.innerHTML = `✅ ${artistIds.size} Künstler gefunden! Folge ihnen...`;
+
+        await fetch('https://api.spotify.com/v1/me/following?type=artist', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ids: [...artistIds] })
+        });
+
+        statusText.innerHTML = `✅ Erfolgreich ${artistIds.size} Künstlern gefolgt!`;
+        document.getElementById("artistCount").textContent = artistIds.size;
+
+        artistNames.forEach(name => {
+            let li = document.createElement("li");
+            li.textContent = name;
+            document.getElementById("artistList").appendChild(li);
+        });
+    }
+</script>
+
+</body>
+</html>
