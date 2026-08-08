@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.1.0 - 2026-08-09
+
+- added a cross-platform desktop GUI with Dry Run and progress reporting
+- added Spotify Authorization Code with PKCE, requiring no Client Secret in
+  the desktop app
+- added native operating-system keychain storage for refresh tokens
+- added reproducible PyInstaller builds for Windows x64, Apple Silicon Macs,
+  and Intel Macs
+- added original generated application icons and architecture-specific release
+  packages
+
 ## 2.0.0 - 2026-08-09
 
 - migrated artist following to Spotify's current generic library API through

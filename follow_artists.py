@@ -106,31 +106,36 @@ def create_client():
     )
 
 
-def stop_for_api_error(action, exc):
-    """Stop with an actionable message for a Spotify API error."""
+def api_error_message(action, exc):
+    """Return an actionable message for a Spotify API error."""
     status = getattr(exc, "http_status", "?")
     headers = getattr(exc, "headers", None) or {}
     retry_after = headers.get("Retry-After") or headers.get("retry-after")
 
     if status == 429:
         wait = f" Retry-After: {retry_after} seconds." if retry_after else ""
-        sys.exit(
+        return (
             f"{action}: Spotify quota/rate limit reached (HTTP 429).{wait}\n"
             "Wait until the limit resets before starting another run."
         )
     if status == 403:
-        sys.exit(
+        return (
             f"{action}: Spotify denied access (HTTP 403).\n"
             "In Development Mode, the source playlist must be owned by the "
             "authenticated user or shared with them as a collaborator. Also "
             "verify the token scopes."
         )
     if status == 401:
-        sys.exit(
+        return (
             f"{action}: Spotify rejected the credentials (HTTP 401).\n"
             "Generate a new refresh token with the current Spotify app."
         )
-    sys.exit(f"{action} failed (HTTP {status}): {exc}")
+    return f"{action} failed (HTTP {status}): {exc}"
+
+
+def stop_for_api_error(action, exc):
+    """Stop with an actionable message for a Spotify API error."""
+    sys.exit(api_error_message(action, exc))
 
 
 def _artist_from_object(artist):
@@ -210,7 +215,12 @@ def embed_playlist_track_ids(playlist_id, session=requests):
     return unique_ids
 
 
-def artists_from_track_ids(client, track_ids, request_delay_seconds=0):
+def artists_from_track_ids(
+    client,
+    track_ids,
+    request_delay_seconds=0,
+    progress=None,
+):
     """Resolve artist IDs using one catalog request per embed track."""
     artists = []
     seen = set()
@@ -221,6 +231,8 @@ def artists_from_track_ids(client, track_ids, request_delay_seconds=0):
             if artist and artist[0] not in seen:
                 seen.add(artist[0])
                 artists.append(artist)
+        if progress:
+            progress(index + 1, len(track_ids))
         if request_delay_seconds and index + 1 < len(track_ids):
             time.sleep(request_delay_seconds)
     return artists
@@ -231,6 +243,8 @@ def read_source_artists(
     playlist_id,
     allow_embed_fallback=False,
     request_delay_seconds=DEFAULT_EMBED_REQUEST_DELAY_SECONDS,
+    logger=print,
+    fallback_progress=None,
 ):
     """Read artists through the API, optionally falling back to the embed."""
     try:
@@ -240,11 +254,11 @@ def read_source_artists(
         if status not in {403, 404} or not allow_embed_fallback:
             raise
 
-    print(
+    logger(
         "Source playlist is unavailable through the Web API; trying the "
         "optional public embed fallback."
     )
-    print(
+    logger(
         "Warning: resolving embed tracks requires one Spotify API request per "
         "track and can consume Development Mode quota."
     )
@@ -253,6 +267,7 @@ def read_source_artists(
         client,
         track_ids,
         request_delay_seconds=request_delay_seconds,
+        progress=fallback_progress,
     )
 
 
@@ -262,9 +277,10 @@ def batch(values, size=LIBRARY_BATCH_SIZE):
         yield values[start:start + size]
 
 
-def unfollowed_artists(client, artists):
+def unfollowed_artists(client, artists, progress=None):
     """Return only artists the current user does not already follow."""
     missing = []
+    checked = 0
     for artist_batch in batch(artists):
         uris = [f"spotify:artist:{artist_id}" for artist_id, _ in artist_batch]
         statuses = client.current_user_saved_items(uris)
@@ -275,15 +291,22 @@ def unfollowed_artists(client, artists):
             for artist, is_followed in zip(artist_batch, statuses)
             if not is_followed
         )
+        checked += len(artist_batch)
+        if progress:
+            progress(checked, len(artists))
     return missing
 
 
-def follow_artists(client, artists):
+def follow_artists(client, artists, progress=None):
     """Follow artists in batches accepted by the current library endpoint."""
+    followed = 0
     for artist_batch in batch(artists):
         client.user_follow_artists(
             [artist_id for artist_id, _ in artist_batch]
         )
+        followed += len(artist_batch)
+        if progress:
+            progress(followed, len(artists))
 
 
 def main():

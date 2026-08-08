@@ -1,0 +1,64 @@
+name: Build desktop apps
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Windows x64
+            os: windows-latest
+            artifact: Spotify-Artist-Auto-Follow-Windows-x64
+          - label: macOS Apple Silicon
+            os: macos-15
+            artifact: Spotify-Artist-Auto-Follow-macOS-Apple-Silicon
+          - label: macOS Intel
+            os: macos-15-intel
+            artifact: Spotify-Artist-Auto-Follow-macOS-Intel
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-build.txt
+
+      - name: Install build dependencies
+        run: python -m pip install -r requirements-build.txt
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build native application
+        run: python tools/build_desktop.py
+
+      - name: Package release file
+        env:
+          ARTIFACT_BASENAME: ${{ matrix.artifact }}
+        run: python tools/package_desktop.py
+
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 30

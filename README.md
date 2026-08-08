@@ -6,20 +6,25 @@
 
 A reusable open-source tool that automatically follows Spotify artists found
 in a playlist selected by the user. Existing follows and duplicate artists are
-skipped. Anyone can fork the repository, connect their own Spotify Developer
-app, and run it locally or every Friday through GitHub Actions.
+skipped. Use the native Windows or macOS desktop app, run the Python source, or
+automate it every Friday through your own GitHub Actions fork.
 
 > This community project is not affiliated with or endorsed by Spotify.
 
 ### Use it with your own Spotify account
 
-This repository is a template, not a hosted service. Every user creates a fork
-and supplies their own Spotify Client ID, Client Secret, refresh token, and
-playlist ID through private GitHub settings. The public repository contains no
-shared Spotify credentials, account data, or personal playlist configuration.
+This repository is a tool, not a hosted service. Every user creates their own
+Spotify Developer app. The desktop app needs only that app's Client ID; users
+who want weekly automation create a fork and store their Client ID, Client
+Secret, refresh token, and playlist ID in private GitHub settings. The public
+repository contains no shared Spotify credentials, account data, or personal
+playlist configuration.
 
 ### Features
 
+- native desktop app for Windows, Apple Silicon Macs, and Intel Macs
+- secure PKCE browser login without a Client Secret in the desktop app
+- refresh tokens stored in the Windows Credential Manager or macOS Keychain
 - current Spotify Web API behavior for Development Mode in 2026
 - independent per-user configuration through GitHub Secrets and Variables
 - complete playlist pagination instead of reading only the first page
@@ -31,6 +36,47 @@ shared Spotify credentials, account data, or personal playlist configuration.
 - `DRY_RUN` preview before changing the Spotify account
 - manual and weekly GitHub Actions runs
 - optional public embed fallback for inaccessible playlists
+
+### Choose how to use it
+
+| Option | Best for | Spotify credentials |
+| --- | --- | --- |
+| Desktop app | most users; manual scans on Windows or macOS | Client ID only; PKCE browser login |
+| GitHub Actions | unattended weekly automation | Client ID, Client Secret, and refresh token as private Secrets |
+| Python source | developers and local command-line use | depends on the selected entry point |
+
+### Desktop app — recommended
+
+Download the current build from
+[GitHub Releases](https://github.com/Kotdesigner/Spotify-Artist-Auto-Follow-Playlist/releases):
+
+- `Spotify-Artist-Auto-Follow-Windows-x64.exe` for 64-bit Windows
+- `Spotify-Artist-Auto-Follow-macOS-Apple-Silicon.zip` for M-series Macs
+- `Spotify-Artist-Auto-Follow-macOS-Intel.zip` for Intel Macs
+
+The public builds are currently unsigned. Windows SmartScreen or macOS
+Gatekeeper may therefore show a warning. The source and reproducible build
+workflow are included in this repository.
+
+#### Desktop setup
+
+1. Create your own app in the
+   [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+2. Add this exact Redirect URI and enable **Web API**:
+
+   ```text
+   http://127.0.0.1:8888/callback
+   ```
+
+3. Start the downloaded application.
+4. Paste your Spotify **Client ID** and playlist link.
+5. Keep **Dry run** enabled for the first scan.
+6. Select **Connect and scan** and approve access in the browser.
+7. Review the artist preview. Disable Dry run only when it is correct.
+
+The desktop app never asks for a Client Secret. Spotify tokens are stored in
+the operating-system credential store, not in a plaintext project file. Use
+**Forget saved login** to remove them.
 
 ### Important Spotify limitation
 
@@ -47,7 +93,7 @@ Following artists can influence Release Radar and other recommendations, but
 Release Radar also considers listening history and artists Spotify predicts the
 listener will enjoy. Following is not the only input.
 
-### Requirements
+### Requirements for GitHub Actions
 
 - GitHub account for automation
 - Spotify Premium account for the owner of a Development Mode app
@@ -55,7 +101,7 @@ listener will enjoy. Following is not the only input.
 - Python 3.12 for local setup
 - source playlist owned by you or shared with you as a collaborator
 
-### Setup
+### GitHub Actions setup
 
 #### 1. Fork the repository
 
@@ -153,6 +199,17 @@ The workflow runs every Friday at **05:00 UTC**. Change the schedule in
 
 ### Run locally
 
+Run the desktop interface from source:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python desktop_app.py
+```
+
+Or run the automation-oriented command-line script:
+
 ```bash
 export SPOTIPY_CLIENT_ID='...'
 export SPOTIPY_CLIENT_SECRET='...'
@@ -215,23 +272,28 @@ See [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Ein wiederverwendbares Open-Source-Werkzeug, das automatisch den Künstlern
 einer vom Nutzer gewählten Spotify-Playlist folgt. Bereits gefolgte und
-innerhalb der Quelle doppelte Künstler werden übersprungen. Jeder kann das
-Repository forken, eine eigene Spotify Developer App verbinden und es lokal
-oder jeden Freitag über GitHub Actions ausführen.
+innerhalb der Quelle doppelte Künstler werden übersprungen. Es kann als native
+Windows- oder macOS-App, direkt aus dem Python-Quellcode oder jeden Freitag
+automatisch über einen eigenen GitHub-Actions-Fork ausgeführt werden.
 
 > Dieses Community-Projekt ist nicht mit Spotify verbunden oder von Spotify
 > unterstützt.
 
 ### Mit dem eigenen Spotify-Konto verwenden
 
-Dieses Repository ist eine Vorlage und kein gehosteter Dienst. Jeder Nutzer
-erstellt einen eigenen Fork und hinterlegt Client ID, Client Secret,
-Refresh-Token und Playlist-ID in seinen privaten GitHub-Einstellungen. Das
-öffentliche Repository enthält keine gemeinsam genutzten Spotify-Zugangsdaten,
-Kontodaten oder persönlichen Playlist-Einstellungen.
+Dieses Repository ist ein Werkzeug und kein gehosteter Dienst. Jeder Nutzer
+erstellt eine eigene Spotify Developer App. Für die Desktop-App genügt deren
+Client ID. Wer die wöchentliche Automatisierung verwenden möchte, erstellt
+einen Fork und hinterlegt Client ID, Client Secret, Refresh-Token und
+Playlist-ID in den privaten GitHub-Einstellungen. Das öffentliche Repository
+enthält keine gemeinsam genutzten Spotify-Zugangsdaten, Kontodaten oder
+persönlichen Playlist-Einstellungen.
 
 ### Funktionen
 
+- native Desktop-App für Windows, Apple-Silicon-Macs und Intel-Macs
+- sichere PKCE-Browseranmeldung ohne Client Secret in der Desktop-App
+- Refresh-Token im Windows Credential Manager oder macOS-Schlüsselbund
 - aktuelles Spotify-Web-API-Verhalten für Development Mode im Jahr 2026
 - unabhängige Konfiguration pro Nutzer über GitHub Secrets und Variablen
 - vollständige Playlist-Pagination statt nur der ersten Seite
@@ -243,6 +305,48 @@ Kontodaten oder persönlichen Playlist-Einstellungen.
 - Vorschau über `DRY_RUN`, bevor das Spotify-Konto verändert wird
 - manuelle und wöchentliche Ausführung über GitHub Actions
 - optionaler öffentlicher Embed-Fallback für nicht erreichbare Playlists
+
+### Verwendung auswählen
+
+| Variante | Geeignet für | Spotify-Zugangsdaten |
+| --- | --- | --- |
+| Desktop-App | die meisten Nutzer; manuelle Läufe unter Windows oder macOS | nur Client ID; PKCE-Browseranmeldung |
+| GitHub Actions | unbeaufsichtigte wöchentliche Automatisierung | Client ID, Client Secret und Refresh-Token als private Secrets |
+| Python-Quellcode | Entwickler und lokale Kommandozeile | abhängig vom verwendeten Einstiegspunkt |
+
+### Desktop-App — empfohlen
+
+Den aktuellen Build unter
+[GitHub Releases](https://github.com/Kotdesigner/Spotify-Artist-Auto-Follow-Playlist/releases)
+herunterladen:
+
+- `Spotify-Artist-Auto-Follow-Windows-x64.exe` für 64-Bit-Windows
+- `Spotify-Artist-Auto-Follow-macOS-Apple-Silicon.zip` für Macs mit M-Prozessor
+- `Spotify-Artist-Auto-Follow-macOS-Intel.zip` für Intel-Macs
+
+Die öffentlichen Builds sind aktuell nicht signiert. Windows SmartScreen oder
+macOS Gatekeeper können deshalb eine Warnung anzeigen. Quellcode und
+reproduzierbarer Build-Workflow befinden sich in diesem Repository.
+
+#### Desktop-Einrichtung
+
+1. Im [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+   eine eigene App erstellen.
+2. Exakt diese Redirect URI hinzufügen und **Web API** aktivieren:
+
+   ```text
+   http://127.0.0.1:8888/callback
+   ```
+
+3. Die heruntergeladene Anwendung starten.
+4. Spotify **Client ID** und Playlist-Link einfügen.
+5. Beim ersten Scan **Dry run** aktiviert lassen.
+6. **Connect and scan** auswählen und den Zugriff im Browser bestätigen.
+7. Die Künstler-Vorschau prüfen. Dry Run erst danach deaktivieren.
+
+Die Desktop-App fragt niemals nach einem Client Secret. Spotify-Tokens werden
+im Zugangsdaten-Speicher des Betriebssystems und nicht als Klartextdatei im
+Projekt abgelegt. Mit **Forget saved login** können sie entfernt werden.
 
 ### Wichtige Spotify-Einschränkung
 
@@ -260,7 +364,7 @@ Künstlern zu folgen kann Release Radar und andere Empfehlungen beeinflussen.
 Spotify berücksichtigt aber auch den Hörverlauf und weitere Künstler, die dem
 Hörer vermutlich gefallen. Folgen ist nicht das einzige Signal.
 
-### Voraussetzungen
+### Voraussetzungen für GitHub Actions
 
 - GitHub-Konto für die Automatisierung
 - Spotify Premium für den Besitzer einer Development-Mode-App
@@ -268,7 +372,7 @@ Hörer vermutlich gefallen. Folgen ist nicht das einzige Signal.
 - Python 3.12 für die lokale Einrichtung
 - eigene oder kollaborativ geteilte Quell-Playlist
 
-### Einrichtung
+### GitHub-Actions-Einrichtung
 
 #### 1. Repository forken
 
@@ -365,6 +469,17 @@ Der Workflow läuft jeden Freitag um **05:00 UTC**. Der Zeitplan kann in
 `SOURCE_PLAYLIST_ID` überspringen den Job, statt einen Fehler zu erzeugen.
 
 ### Lokal ausführen
+
+Desktop-Oberfläche aus dem Quellcode starten:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python desktop_app.py
+```
+
+Oder das für Automatisierung vorgesehene Kommandozeilen-Skript verwenden:
 
 ```bash
 export SPOTIPY_CLIENT_ID='...'
