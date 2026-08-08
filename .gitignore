@@ -1,6 +1,7 @@
 .DS_Store
 .env
 .venv/
+.venv-build/
 __pycache__/
 *.py[cod]
 .cache
@@ -10,3 +11,10 @@ __pycache__/
 .coverage
 htmlcov/
 legacy/
+build/
+dist/
+release/
+*.spec
+assets/app.png
+assets/app.ico
+assets/app.icns
