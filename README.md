@@ -4,15 +4,24 @@
 
 ## English
 
-Automatically follows Spotify artists found in a source playlist. Existing
-follows and duplicate artists are skipped. The tool can run locally or every
-Friday through GitHub Actions.
+A reusable open-source tool that automatically follows Spotify artists found
+in a playlist selected by the user. Existing follows and duplicate artists are
+skipped. Anyone can fork the repository, connect their own Spotify Developer
+app, and run it locally or every Friday through GitHub Actions.
 
 > This community project is not affiliated with or endorsed by Spotify.
+
+### Use it with your own Spotify account
+
+This repository is a template, not a hosted service. Every user creates a fork
+and supplies their own Spotify Client ID, Client Secret, refresh token, and
+playlist ID through private GitHub settings. The public repository contains no
+shared Spotify credentials, account data, or personal playlist configuration.
 
 ### Features
 
 - current Spotify Web API behavior for Development Mode in 2026
+- independent per-user configuration through GitHub Secrets and Variables
 - complete playlist pagination instead of reading only the first page
 - support for current `item` and compatible legacy `track` response fields
 - duplicate artist removal while preserving source order
@@ -48,7 +57,19 @@ listener will enjoy. Following is not the only input.
 
 ### Setup
 
-#### 1. Create a Spotify Developer app
+#### 1. Fork the repository
+
+Select **Fork** at the top of this GitHub repository. The automation will run
+inside your own fork with your own Spotify credentials and playlist.
+
+Alternatively, clone your fork locally:
+
+```bash
+git clone https://github.com/YOUR-GITHUB-NAME/Spotify-Artist-Auto-Follow-Playlist.git
+cd Spotify-Artist-Auto-Follow-Playlist
+```
+
+#### 2. Create a Spotify Developer app
 
 1. Open the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
 2. Select **Create app**.
@@ -64,7 +85,7 @@ listener will enjoy. Following is not the only input.
 
 Do not use `localhost`; Spotify requires an explicit loopback IP address.
 
-#### 2. Generate a refresh token
+#### 3. Generate a refresh token
 
 Run once on your computer:
 
@@ -83,9 +104,9 @@ The refresh token is a password. Never commit it, post it in an issue, or put
 it in a screenshot. This project deliberately uses an in-memory cache and does
 not create Spotipy's plaintext `.cache` file.
 
-#### 3. Add GitHub Secrets
+#### 4. Add GitHub Secrets
 
-In your repository, open:
+In your fork, open:
 
 **Settings → Secrets and variables → Actions → Secrets**
 
@@ -97,7 +118,7 @@ Create these repository secrets:
 | `SPOTIPY_CLIENT_SECRET` | Client Secret of the Spotify app |
 | `SPOTIPY_REFRESH_TOKEN` | output from `get_refresh_token.py` |
 
-#### 4. Add GitHub Variables
+#### 5. Add GitHub Variables
 
 Open **Settings → Secrets and variables → Actions → Variables**:
 
@@ -118,7 +139,7 @@ https://open.spotify.com/playlist/YOUR_PLAYLIST_ID?si=...
 
 Store only the ID, not the complete URL.
 
-#### 5. Start a safe test
+#### 6. Start a safe test
 
 1. Set `DRY_RUN` to `true`.
 2. Open **Actions → Follow Spotify artists → Run workflow**.
@@ -192,16 +213,27 @@ See [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Deutsch
 
-Folgt automatisch den Spotify-Künstlern einer Quell-Playlist. Bereits gefolgte
-und innerhalb der Quelle doppelte Künstler werden übersprungen. Das Werkzeug
-kann lokal oder jeden Freitag über GitHub Actions ausgeführt werden.
+Ein wiederverwendbares Open-Source-Werkzeug, das automatisch den Künstlern
+einer vom Nutzer gewählten Spotify-Playlist folgt. Bereits gefolgte und
+innerhalb der Quelle doppelte Künstler werden übersprungen. Jeder kann das
+Repository forken, eine eigene Spotify Developer App verbinden und es lokal
+oder jeden Freitag über GitHub Actions ausführen.
 
 > Dieses Community-Projekt ist nicht mit Spotify verbunden oder von Spotify
 > unterstützt.
 
+### Mit dem eigenen Spotify-Konto verwenden
+
+Dieses Repository ist eine Vorlage und kein gehosteter Dienst. Jeder Nutzer
+erstellt einen eigenen Fork und hinterlegt Client ID, Client Secret,
+Refresh-Token und Playlist-ID in seinen privaten GitHub-Einstellungen. Das
+öffentliche Repository enthält keine gemeinsam genutzten Spotify-Zugangsdaten,
+Kontodaten oder persönlichen Playlist-Einstellungen.
+
 ### Funktionen
 
 - aktuelles Spotify-Web-API-Verhalten für Development Mode im Jahr 2026
+- unabhängige Konfiguration pro Nutzer über GitHub Secrets und Variablen
 - vollständige Playlist-Pagination statt nur der ersten Seite
 - Unterstützung für das aktuelle Feld `item` und das kompatible alte `track`
 - Duplikatprüfung bei Erhalt der Quellreihenfolge
@@ -238,7 +270,20 @@ Hörer vermutlich gefallen. Folgen ist nicht das einzige Signal.
 
 ### Einrichtung
 
-#### 1. Spotify Developer App erstellen
+#### 1. Repository forken
+
+Oben in diesem GitHub-Repository **Fork** auswählen. Die Automatisierung läuft
+anschließend im eigenen Fork mit den eigenen Spotify-Zugangsdaten und der
+eigenen Playlist.
+
+Alternativ den eigenen Fork lokal klonen:
+
+```bash
+git clone https://github.com/DEIN-GITHUB-NAME/Spotify-Artist-Auto-Follow-Playlist.git
+cd Spotify-Artist-Auto-Follow-Playlist
+```
+
+#### 2. Spotify Developer App erstellen
 
 1. [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) öffnen.
 2. **Create app** auswählen.
@@ -254,7 +299,7 @@ Hörer vermutlich gefallen. Folgen ist nicht das einzige Signal.
 
 Nicht `localhost` verwenden. Spotify verlangt eine explizite Loopback-IP.
 
-#### 2. Refresh-Token erzeugen
+#### 3. Refresh-Token erzeugen
 
 Einmalig auf dem eigenen Computer ausführen:
 
@@ -272,9 +317,9 @@ Der Refresh-Token ist ein Passwort. Niemals committen, in einem Issue posten
 oder in einem Screenshot zeigen. Dieses Projekt verwendet absichtlich einen
 Speicher-Cache und erzeugt keine Spotipy-Klartextdatei `.cache`.
 
-#### 3. GitHub Secrets eintragen
+#### 4. GitHub Secrets eintragen
 
-Im eigenen Repository öffnen:
+Im eigenen Fork öffnen:
 
 **Settings → Secrets and variables → Actions → Secrets**
 
@@ -286,7 +331,7 @@ Diese Repository-Secrets anlegen:
 | `SPOTIPY_CLIENT_SECRET` | Client Secret der Spotify App |
 | `SPOTIPY_REFRESH_TOKEN` | Ausgabe von `get_refresh_token.py` |
 
-#### 4. GitHub-Variablen eintragen
+#### 5. GitHub-Variablen eintragen
 
 Unter **Settings → Secrets and variables → Actions → Variables**:
 
@@ -307,7 +352,7 @@ https://open.spotify.com/playlist/DEINE_PLAYLIST_ID?si=...
 
 Nur die ID speichern, nicht die vollständige URL.
 
-#### 5. Sicheren Test starten
+#### 6. Sicheren Test starten
 
 1. `DRY_RUN` auf `true` setzen.
 2. **Actions → Follow Spotify artists → Run workflow** öffnen.
