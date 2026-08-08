@@ -1,0 +1,2 @@
+spotipy>=2.26,<3
+requests>=2.32,<3
