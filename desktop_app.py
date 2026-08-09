@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-platform desktop interface for Spotify Artist Auto-Follow."""
+"""Cross-platform desktop interface for Playlist Artist Follower for Spotify."""
 
 import logging
 import queue
@@ -28,8 +28,8 @@ from spotify_desktop_auth import (
 )
 
 
-APP_NAME = "Spotify Artist Auto-Follow"
-APP_VERSION = "2.1.0"
+APP_NAME = "Playlist Artist Follower for Spotify"
+APP_VERSION = "2.2.0"
 
 
 class DesktopApp:

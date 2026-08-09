@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.0 - 2026-08-09
+
+- renamed the public application to **Playlist Artist Follower for Spotify**
+- updated native application names, metadata, bundle identifier, and download
+  filenames for Windows and macOS
+- added transparent migration from the former keychain service name so existing
+  desktop users remain signed in
+
 ## 2.1.0 - 2026-08-09
 
 - added a cross-platform desktop GUI with Dry Run and progress reporting

@@ -9,8 +9,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-APP_NAME = "Spotify-Artist-Auto-Follow"
-APP_VERSION = "2.1.0"
+APP_NAME = "Playlist-Artist-Follower-for-Spotify"
+APP_VERSION = "2.2.0"
 
 
 def finalize_macos_bundle():
@@ -19,8 +19,8 @@ def finalize_macos_bundle():
     info_path = app_bundle / "Contents" / "Info.plist"
     with info_path.open("rb") as stream:
         info = plistlib.load(stream)
-    info["CFBundleDisplayName"] = "Spotify Artist Auto-Follow"
-    info["CFBundleName"] = "Spotify Artist Auto-Follow"
+    info["CFBundleDisplayName"] = "Playlist Artist Follower for Spotify"
+    info["CFBundleName"] = "Playlist Artist Follower for Spotify"
     info["CFBundleShortVersionString"] = APP_VERSION
     info["CFBundleVersion"] = APP_VERSION
     with info_path.open("wb") as stream:
@@ -85,7 +85,7 @@ def main():
                 "--icon",
                 str(ROOT / "assets" / "app.icns"),
                 "--osx-bundle-identifier",
-                "io.github.kotdesigner.spotify-artist-auto-follow",
+                "io.github.kotdesigner.playlist-artist-follower-for-spotify",
             ]
         )
     else:

@@ -181,7 +181,7 @@ def embed_playlist_track_ids(playlist_id, session=requests):
     response = session.get(
         url,
         timeout=EMBED_TIMEOUT_SECONDS,
-        headers={"User-Agent": "spotify-artist-auto-follow/2.0"},
+        headers={"User-Agent": "playlist-artist-follower-for-spotify/2.2"},
     )
     response.raise_for_status()
 

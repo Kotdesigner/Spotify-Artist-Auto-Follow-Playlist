@@ -20,13 +20,13 @@ jobs:
         include:
           - label: Windows x64
             os: windows-latest
-            artifact: Spotify-Artist-Auto-Follow-Windows-x64
+            artifact: Playlist-Artist-Follower-for-Spotify-Windows-x64
           - label: macOS Apple Silicon
             os: macos-15
-            artifact: Spotify-Artist-Auto-Follow-macOS-Apple-Silicon
+            artifact: Playlist-Artist-Follower-for-Spotify-macOS-Apple-Silicon
           - label: macOS Intel
             os: macos-15-intel
-            artifact: Spotify-Artist-Auto-Follow-macOS-Intel
+            artifact: Playlist-Artist-Follower-for-Spotify-macOS-Intel
 
     steps:
       - name: Check out repository
