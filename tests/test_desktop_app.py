@@ -2,7 +2,11 @@ import json
 import unittest
 
 import desktop_logic as module
-from spotify_desktop_auth import KEYRING_SERVICE, KeyringCacheHandler
+from spotify_desktop_auth import (
+    KEYRING_SERVICE,
+    LEGACY_KEYRING_SERVICE,
+    KeyringCacheHandler,
+)
 
 
 CLIENT_ID = "C" * 32
@@ -72,6 +76,20 @@ class DesktopAppTests(unittest.TestCase):
         self.assertEqual(json.loads(stored), token)
         self.assertTrue(cache.clear())
         self.assertFalse(cache.clear())
+
+    def test_legacy_keyring_login_is_migrated(self):
+        fake_keyring = FakeKeyring()
+        cache = KeyringCacheHandler(CLIENT_ID, keyring_module=fake_keyring)
+        token = {"access_token": "legacy", "refresh_token": "refresh"}
+        fake_keyring.values[(LEGACY_KEYRING_SERVICE, cache.account)] = json.dumps(token)
+
+        self.assertEqual(cache.get_cached_token(), token)
+        self.assertNotIn(
+            (LEGACY_KEYRING_SERVICE, cache.account),
+            fake_keyring.values,
+        )
+        stored = fake_keyring.values[(KEYRING_SERVICE, cache.account)]
+        self.assertEqual(json.loads(stored), token)
 
 
 if __name__ == "__main__":

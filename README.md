@@ -1,4 +1,4 @@
-# Spotify Artist Auto-Follow
+# Playlist Artist Follower for Spotify
 
 [English](#english) · [Deutsch](#deutsch)
 
@@ -50,9 +50,9 @@ playlist configuration.
 Download the current build from
 [GitHub Releases](https://github.com/Kotdesigner/Spotify-Artist-Auto-Follow-Playlist/releases):
 
-- `Spotify-Artist-Auto-Follow-Windows-x64.exe` for 64-bit Windows
-- `Spotify-Artist-Auto-Follow-macOS-Apple-Silicon.zip` for M-series Macs
-- `Spotify-Artist-Auto-Follow-macOS-Intel.zip` for Intel Macs
+- `Playlist-Artist-Follower-for-Spotify-Windows-x64.exe` for 64-bit Windows
+- `Playlist-Artist-Follower-for-Spotify-macOS-Apple-Silicon.zip` for M-series Macs
+- `Playlist-Artist-Follower-for-Spotify-macOS-Intel.zip` for Intel Macs
 
 The public builds are currently unsigned. Windows SmartScreen or macOS
 Gatekeeper may therefore show a warning. The source and reproducible build
@@ -320,9 +320,9 @@ Den aktuellen Build unter
 [GitHub Releases](https://github.com/Kotdesigner/Spotify-Artist-Auto-Follow-Playlist/releases)
 herunterladen:
 
-- `Spotify-Artist-Auto-Follow-Windows-x64.exe` für 64-Bit-Windows
-- `Spotify-Artist-Auto-Follow-macOS-Apple-Silicon.zip` für Macs mit M-Prozessor
-- `Spotify-Artist-Auto-Follow-macOS-Intel.zip` für Intel-Macs
+- `Playlist-Artist-Follower-for-Spotify-Windows-x64.exe` für 64-Bit-Windows
+- `Playlist-Artist-Follower-for-Spotify-macOS-Apple-Silicon.zip` für Macs mit M-Prozessor
+- `Playlist-Artist-Follower-for-Spotify-macOS-Intel.zip` für Intel-Macs
 
 Die öffentlichen Builds sind aktuell nicht signiert. Windows SmartScreen oder
 macOS Gatekeeper können deshalb eine Warnung anzeigen. Quellcode und

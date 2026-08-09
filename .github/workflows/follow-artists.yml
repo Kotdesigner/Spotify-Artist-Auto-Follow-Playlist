@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: spotify-artist-auto-follow
+  group: playlist-artist-follower-for-spotify
   cancel-in-progress: false
 
 jobs:
