@@ -48,7 +48,7 @@ playlist configuration.
 ### Desktop app — recommended
 
 Download the current build from
-[GitHub Releases](https://github.com/Kotdesigner/Spotify-Artist-Auto-Follow-Playlist/releases):
+[GitHub Releases](https://github.com/Kotdesigner/Playlist_Artist_Follower_for_Spotify/releases):
 
 - `Playlist-Artist-Follower-for-Spotify-Windows-x64.exe` for 64-bit Windows
 - `Playlist-Artist-Follower-for-Spotify-macOS-Apple-Silicon.zip` for M-series Macs
@@ -111,8 +111,8 @@ inside your own fork with your own Spotify credentials and playlist.
 Alternatively, clone your fork locally:
 
 ```bash
-git clone https://github.com/YOUR-GITHUB-NAME/Spotify-Artist-Auto-Follow-Playlist.git
-cd Spotify-Artist-Auto-Follow-Playlist
+git clone https://github.com/YOUR-GITHUB-NAME/Playlist_Artist_Follower_for_Spotify.git
+cd Playlist_Artist_Follower_for_Spotify
 ```
 
 #### 2. Create a Spotify Developer app
@@ -317,7 +317,7 @@ persönlichen Playlist-Einstellungen.
 ### Desktop-App — empfohlen
 
 Den aktuellen Build unter
-[GitHub Releases](https://github.com/Kotdesigner/Spotify-Artist-Auto-Follow-Playlist/releases)
+[GitHub Releases](https://github.com/Kotdesigner/Playlist_Artist_Follower_for_Spotify/releases)
 herunterladen:
 
 - `Playlist-Artist-Follower-for-Spotify-Windows-x64.exe` für 64-Bit-Windows
@@ -383,8 +383,8 @@ eigenen Playlist.
 Alternativ den eigenen Fork lokal klonen:
 
 ```bash
-git clone https://github.com/DEIN-GITHUB-NAME/Spotify-Artist-Auto-Follow-Playlist.git
-cd Spotify-Artist-Auto-Follow-Playlist
+git clone https://github.com/DEIN-GITHUB-NAME/Playlist_Artist_Follower_for_Spotify.git
+cd Playlist_Artist_Follower_for_Spotify
 ```
 
 #### 2. Spotify Developer App erstellen
